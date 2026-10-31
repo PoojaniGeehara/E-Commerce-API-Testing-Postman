@@ -1,0 +1,300 @@
+{
+  "info": {
+    "_postman_id": "e27b3fb6-c26a-4f49-bb75-db1e54f2c3ec",
+    "name": "E-Commerce Product API Tests",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "58203466",
+    "_collection_link": "https://go.postman.co/collection/58203466-e27b3fb6-c26a-4f49-bb75-db1e54f2c3ec?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Product Retrieval",
+      "item": [
+        {
+          "name": "TC001 - Get All Products",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\npm.test(\"Response is JSON\", function () {\r\n    pm.expect(pm.response.headers.get(\"Content-Type\"))\r\n        .to.include(\"application/json\");\r\n});\r\n\r\npm.test(\"Response contains products\", function () {\r\n    const jsonData = pm.response.json();\r\n    pm.expect(jsonData.products).to.be.an(\"array\");\r\n});\r\n\r\npm.test(\"Products array is not empty\", function () {\r\n    const jsonData = pm.response.json();\r\n    pm.expect(jsonData.products.length).to.be.above(0);\r\n});\r\n\r\npm.test(\"Response time is below 2000ms\", function () {\r\n    pm.expect(pm.response.responseTime).to.be.below(2000);\r\n});\r\n"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/products",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "products"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "TC002 - Get Single Product",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\npm.test(\"Product ID is 1\", function () {\r\n    const jsonData = pm.response.json();\r\n    pm.expect(jsonData.id).to.eql(1);\r\n});\r\n\r\npm.test(\"Product has a title\", function () {\r\n    const jsonData = pm.response.json();\r\n    pm.expect(jsonData.title).to.be.a(\"string\");\r\n});\r\n\r\npm.test(\"Product has a price\", function () {\r\n    const jsonData = pm.response.json();\r\n    pm.expect(jsonData.price).to.be.a(\"number\");\r\n});\r\n\r\npm.test(\"Response time is below 2000ms\", function () {\r\n    pm.expect(pm.response.responseTime).to.be.below(2000);\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/products/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "products",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "TC003 - Search Products",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\npm.test(\"Response contains products\", function () {\r\n    const jsonData = pm.response.json();\r\n    pm.expect(jsonData.products).to.be.an(\"array\");\r\n});\r\n\r\npm.test(\"Search returns results\", function () {\r\n    const jsonData = pm.response.json();\r\n    pm.expect(jsonData.products.length).to.be.above(0);\r\n});\r\n\r\npm.test(\"Response time is below 2000ms\", function () {\r\n    pm.expect(pm.response.responseTime).to.be.below(2000);\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/products/search?q=phone",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "products",
+                "search"
+              ],
+              "query": [
+                {
+                  "key": "q",
+                  "value": "phone"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Product Creation",
+      "item": [
+        {
+          "name": "TC004 Create Product",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 201\", function () {\r\n    pm.response.to.have.status(201);\r\n});\r\n\r\npm.test(\"Product was created\", function () {\r\n    const jsonData = pm.response.json();\r\n    pm.expect(jsonData.id).to.exist;\r\n});\r\n\r\npm.test(\"Product title is correct\", function () {\r\n    const jsonData = pm.response.json();\r\n    pm.expect(jsonData.title).to.eql(\"QA Testing Laptop\");\r\n});\r\n\r\npm.test(\"Product price is correct\", function () {\r\n    const jsonData = pm.response.json();\r\n    pm.expect(jsonData.price).to.eql(1250);\r\n});\r\n\r\npm.test(\"Response time is below 2000ms\", function () {\r\n    pm.expect(pm.response.responseTime).to.be.below(2000);\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"title\": \"QA Testing Laptop\",\r\n    \"price\": 1250,\r\n    \"category\": \"laptops\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/products/add",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "products",
+                "add"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Product Update",
+      "item": [
+        {
+          "name": "TC005 - PUT Update Product",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\npm.test(\"Product ID is 1\", function () {\r\n    const jsonData = pm.response.json();\r\n    pm.expect(jsonData.id).to.eql(1);\r\n});\r\n\r\npm.test(\"Product title was updated\", function () {\r\n    const jsonData = pm.response.json();\r\n    pm.expect(jsonData.title).to.eql(\"Updated QA Laptop\");\r\n});\r\n\r\npm.test(\"Response time is below 2000ms\", function () {\r\n    pm.expect(pm.response.responseTime).to.be.below(2000);\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"title\": \"Updated QA Laptop\",\r\n    \"price\": 1500,\r\n    \"category\": \"laptops\"\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/products/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "products",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "TC006 - PATCH Update Product",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\npm.test(\"Product ID is 1\", function () {\r\n    const jsonData = pm.response.json();\r\n    pm.expect(jsonData.id).to.eql(1);\r\n});\r\n\r\npm.test(\"Price was updated\", function () {\r\n    const jsonData = pm.response.json();\r\n    pm.expect(jsonData.price).to.eql(1399);\r\n});\r\n\r\npm.test(\"Response time is below 2000ms\", function () {\r\n    pm.expect(pm.response.responseTime).to.be.below(2000);\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"price\": 1399\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/products/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "products",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Product Deletion",
+      "item": [
+        {
+          "name": "TC007 - Delete Product",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\npm.test(\"Deleted product ID is 1\", function () {\r\n    const jsonData = pm.response.json();\r\n    pm.expect(jsonData.id).to.eql(1);\r\n});\r\n\r\npm.test(\"Product is marked as deleted\", function () {\r\n    const jsonData = pm.response.json();\r\n    pm.expect(jsonData.isDeleted).to.eql(true);\r\n});\r\n\r\npm.test(\"Deleted date exists\", function () {\r\n    const jsonData = pm.response.json();\r\n    pm.expect(jsonData.deletedOn).to.exist;\r\n});\r\n\r\npm.test(\"Response time is below 2000ms\", function () {\r\n    pm.expect(pm.response.responseTime).to.be.below(2000);\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/products/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "products",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Negative Testing",
+      "item": [
+        {
+          "name": "TC008 - Invalid Product",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 404\", function () {\r\n    pm.response.to.have.status(404);\r\n});\r\n\r\npm.test(\"Error response is JSON\", function () {\r\n    pm.expect(pm.response.headers.get(\"Content-Type\"))\r\n        .to.include(\"application/json\");\r\n});\r\n\r\npm.test(\"Error message exists\", function () {\r\n    const jsonData = pm.response.json();\r\n    pm.expect(jsonData.message).to.exist;\r\n});\r\n\r\npm.test(\"Response time is below 2000ms\", function () {\r\n    pm.expect(pm.response.responseTime).to.be.below(2000);\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/products/9999",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "products",
+                "9999"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
